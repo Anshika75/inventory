@@ -86,10 +86,10 @@ public class AuthenticationService {
                 .enabled(false)
                 .build();
 
-        Role role = roleRepository.findByName(URole.ROLE_USER).orElseGet(() -> {
+        Role role = roleRepository.findByName(URole.ROLE_ADMIN).orElseGet(() -> {
 
             Role patientRole = new Role();
-            patientRole.setName(URole.ROLE_USER);
+            patientRole.setName(URole.ROLE_ADMIN);
             return roleRepository.save(patientRole);
 
         });

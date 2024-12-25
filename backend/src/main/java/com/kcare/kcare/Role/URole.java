@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum URole {
 
-    ROLE_ADMIN, ROLE_DEPARTMENT_HEAD, ROLE_USER
+    ROLE_ADMIN, ROLE_DEPARTMENT_HEAD, ROLE_MANAGEMENT
 
 }
