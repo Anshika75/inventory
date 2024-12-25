@@ -9,7 +9,10 @@ export default {
       colors: {
         primary: '#115297',
         secondary: '#383E49',
-        formBorder: '#D9D9D9'
+        tertiary: '#667085',
+        formBorder: '#D9D9D9',
+        key: '#858D9D',
+        value: '#5D6679'
       },
     },
   },
