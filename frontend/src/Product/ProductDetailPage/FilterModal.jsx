@@ -4,10 +4,10 @@ function FilterModal({ isOpen, onClose, selectedStatuses, onStatusChange }) {
   if (!isOpen) return null;
 
   const statuses = [
-    { label: 'Delivered', value: 'delivered' },
-    { label: 'On Way', value: 'on way' },
-    { label: 'Confirmed', value: 'confirmed' },
-    { label: 'Pending', value: 'pending' }
+    { label: 'Delivered', value: 'Delivered' },
+    { label: 'On Way', value: 'On Way' },
+    { label: 'Confirmed', value: 'Confirmed' },
+    { label: 'Pending', value: 'Pending' }
   ];
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import NewPurchaseModal from './NewPurchaseModal';
-import FilterModal from './fitler-modal';
+import FilterModal from './FilterModal';
 
 function Purchases() {
   const [editingId, setEditingId] = useState(null);
