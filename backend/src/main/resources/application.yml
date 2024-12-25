@@ -1,0 +1,68 @@
+
+
+spring:
+  application:
+    name: kcare
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 8640000
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+  mvc:
+    static-path-pattern: /uploads/**
+
+
+  web:
+    resources:
+      static-locations: file:./uploads/
+  datasource:
+    url: jdbc:postgresql://ep-muddy-smoke-a19d0spv.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
+    username: neondb_owner
+    password: UH2DTLItCkc7
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: Avichalllkumar@gmail.com
+    password: rkpukcnurzeoigzd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            require: true
+
+server:
+  servlet:
+    context-path: /api/v1/
+  port: 9090
+
+# springdoc:
+#   default-produces-media-type: application/json
+
+file:
+  uploads:
+    photos-output-path: ./uploads
+
+
+# web.resources.static-locations=file:/path/to/your/uploads/
+
+
+
+
+
+
+# # spring.profiles.servlet.multipart.max-file-size=5MB
+# # spring.mail.host=smtp.gmail.com
+# # spring.mail.port=587
+# # spring.mail.username=Avichalllkumar@gmail.com
+# # spring.mail.password=rkpukcnurzeoigzd
+# # spring.mail.properties.mail.smtp.auth=true
+# # spring.mail.properties.mail.smtp.starttls.enable=true
