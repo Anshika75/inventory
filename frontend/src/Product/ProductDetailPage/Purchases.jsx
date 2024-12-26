@@ -50,6 +50,7 @@ function Purchases() {
       status: 'Pending'
     },
   ]);
+  
 
   const handleEdit = (purchase) => {
     setEditingId(purchase.id);
@@ -57,9 +58,14 @@ function Purchases() {
   };
 
   const handleSave = () => {
-    // Here you would typically make an API call to update the data
-    setEditingId(null);
-    setEditData({});
+    if (window.confirm('Are you sure you want to save these changes?')) {
+      // Here you would typically make an API call to update the data
+      setPurchaseData(prevData => 
+        prevData.map(item => item.id === editingId ? editData : item)
+      );
+      setEditingId(null);
+      setEditData({});
+    }
   };
 
   const handleCancel = () => {
@@ -68,7 +74,9 @@ function Purchases() {
   };
 
   const handleDelete = (id) => {
-    setPurchaseData(prevData => prevData.filter(item => item.id !== id));
+    if (window.confirm('Are you sure you want to delete this purchase record?')) {
+      setPurchaseData(prevData => prevData.filter(item => item.id !== id));
+    }
   };
 
   const handleChange = (e, field) => {
@@ -401,10 +409,11 @@ function Purchases() {
                         onChange={(e) => handleChange(e, 'status')}
                         className="border rounded px-2 py-1 w-full"
                       >
-                        <option value="delivered">Delivered</option>
-                        <option value="on way">On Way</option>
-                        <option value="confirmed">Confirmed</option>
-                        <option value="pending">Pending</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="On Way">On Way</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
                       </select>
                     ) : (
                       <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(purchase.status)}`}>

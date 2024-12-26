@@ -36,6 +36,15 @@ export default function Overview({ isEditing }) {
   const itemTypes = ['Medicine', 'Equipment', 'Supplies', 'Other'];
   const stores = ['Central', 'Branch 1', 'Branch 2'];
   const productTypes = ['Asset', 'Consumable'];
+  const [imagePreview, setImagePreview] = useState(Placeholder);
+
+  const handleImageUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const previewURL = URL.createObjectURL(file);
+      setImagePreview(previewURL);
+    }
+  };
 
   useEffect(() => {
     const selectedSupplier = suppliers.find(s => s.name === formData.supplierName);
@@ -250,13 +259,27 @@ export default function Overview({ isEditing }) {
         {/* Product Image */}
         <div className="border-2 border-dashed rounded-lg p-4 mb-6">
           <div className="bg-gray-100 aspect-square rounded-lg">
-            {isEditing ? (
-              <label className="w-full h-full flex items-center justify-center cursor-pointer">
-                <input type="file" className="hidden" accept="image/*" />
-                <span className="text-gray-500">Click to upload image</span>
+          {isEditing ? (
+              <label className="w-full h-full flex items-center justify-center cursor-pointer relative">
+                <input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+                  <span className="absolute text-white z-20 px-12 py-4 bg-gray-700 bg-opacity-70">Click to upload image</span>
+                <img
+                  src={imagePreview}
+                  alt="Uploaded Preview"
+                  className="object-cover h-full w-full"
+                />
               </label>
             ) : (
-              <img src={Placeholder} alt="Product" className="object-cover h-full w-full" />
+              <img
+                src={imagePreview}
+                alt="Product"
+                className="object-cover h-full w-full"
+              />
             )}
           </div>
         </div>
