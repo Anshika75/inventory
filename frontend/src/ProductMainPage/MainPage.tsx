@@ -3,7 +3,7 @@ import Header from './Header'
 import Sidebar from './Sidebar'
 import ProductDetailPage from '../Product/ProductDetailPage/ProductDetailPage'
 
-export default function MainPage() {
+export default function ProductMainPage() {
   return (
     <>
         <div className="flex w-full h-screen overflow-hidden">
