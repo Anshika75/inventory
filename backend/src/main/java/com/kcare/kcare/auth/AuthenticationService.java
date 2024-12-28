@@ -28,6 +28,7 @@ import com.kcare.kcare.User.Token;
 import com.kcare.kcare.User.TokenRepository;
 import com.kcare.kcare.User.User;
 import com.kcare.kcare.User.Userrepository;
+import com.kcare.kcare.common.Response;
 import com.kcare.kcare.handler.AccountNotVerfiedException;
 import com.kcare.kcare.handler.DuplicateEmailException;
 import com.kcare.kcare.handler.PasswordNotMatchException;
@@ -71,7 +72,7 @@ public class AuthenticationService {
 
     // private final OkHttpClient client = new OkHttpClient();
 
-    public String register(RegistrationRequest request) throws MessagingException, IOException {
+    public Response<RegistrationRequest> register(RegistrationRequest request) throws MessagingException, IOException {
 
         if (userrepository.existsByEmail(request.getEmail())) {
             throw new DuplicateEmailException(request.getEmail() + " already Exist");
@@ -100,7 +101,13 @@ public class AuthenticationService {
         userrepository.save(user);
         sendValidationEmail(user);
 
-        return "Registration Successfull";
+        return new Response<>(
+                request,
+                LocalDateTime.now(),
+                "sucessfully saved",
+                HttpStatus.CREATED
+
+        );
 
     }
 
@@ -211,7 +218,8 @@ public class AuthenticationService {
 
     // @Transactional
 
-    public String resendOtp(ResendOtpRequest resendOtpRequest) throws MessagingException, IOException {
+    public Response<ResendOtpRequest> resendOtp(ResendOtpRequest resendOtpRequest)
+            throws MessagingException, IOException {
         User user = userrepository.findByEmail(resendOtpRequest.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         resendOtpRequest.getEmail() + " is Not Registered"));
@@ -222,7 +230,13 @@ public class AuthenticationService {
         String otp = generateAndSaveActivationToken(user);
         // sendSms(otp, resendOtpRequest.getContactNumber());
 
-        return "Otp send";
+        return new Response<>(
+                resendOtpRequest,
+                LocalDateTime.now(),
+                "sucessfully saved",
+                HttpStatus.CREATED
+
+        );
 
     }
 
@@ -243,17 +257,24 @@ public class AuthenticationService {
 
     }
 
-    public String forgetPassword(ForgetPasswordRequest forgetPassword) throws MessagingException, IOException {
+    public Response<ForgetPasswordRequest> forgetPassword(ForgetPasswordRequest forgetPassword)
+            throws MessagingException, IOException {
         User user = userrepository.findByEmail(forgetPassword.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("Not Registered"));
         String otp = generateAndSaveActivationToken(user);
         // sendSms(otp, forgetPassword.getContactNumber());
         // verifyOtpforPasswordReset(otp, forgetPassword.getContactNumber());
 
-        return "Otp Send";
+        return new Response<>(
+                forgetPassword,
+                LocalDateTime.now(),
+                "sucessfully saved",
+                HttpStatus.CREATED
+
+        );
     }
 
-    public String resetForgottendPassword(ResetPasswordRequest resetPasswordRequest) {
+    public Response<ResetPasswordRequest> resetForgottendPassword(ResetPasswordRequest resetPasswordRequest) {
 
         User user = userrepository.findByEmail(resetPasswordRequest.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("user not Found"));
@@ -268,7 +289,13 @@ public class AuthenticationService {
         user.setEnabled(true);
         userrepository.save(user);
 
-        return "Password successfully reset";
+        return new Response<>(
+                resetPasswordRequest,
+                LocalDateTime.now(),
+                "sucessfully saved",
+                HttpStatus.CREATED
+
+        );
     }
 
     @Scheduled(fixedRate = 60000)
@@ -285,7 +312,7 @@ public class AuthenticationService {
     // }
     // }
 
-    public String otpVerification(OtpVerficationRequest otpVerficationRequest) {
+    public Response<OtpVerficationRequest> otpVerification(OtpVerficationRequest otpVerficationRequest) {
 
         Token savedToken = tokenRepository.findByToken(otpVerficationRequest.getOtp())
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid Otp"));
@@ -307,6 +334,12 @@ public class AuthenticationService {
             userrepository.save(user);
         }
 
-        return "Otp Verified";
+        return new Response<>(
+                otpVerficationRequest,
+                LocalDateTime.now(),
+                "sucessfully saved",
+                HttpStatus.CREATED
+
+        );
     }
 }

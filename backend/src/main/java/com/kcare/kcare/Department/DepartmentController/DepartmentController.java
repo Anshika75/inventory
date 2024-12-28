@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kcare.kcare.common.Response;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -19,7 +21,8 @@ public class DepartmentController {
     // @Operation(summary = "create Department", description = "Create Department by
     // Entering data ")
     @PostMapping("/createDepartment")
-    public ResponseEntity<?> createDepartment(@RequestBody DepartmentRequest departmentRequest) {
+    public ResponseEntity<Response<DepartmentRequest>> createDepartment(
+            @RequestBody DepartmentRequest departmentRequest) {
 
         return ResponseEntity.ok(departmentService.createDepartment(departmentRequest));
     }
