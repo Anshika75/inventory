@@ -2,9 +2,11 @@ package com.kcare.kcare.Product.controller.productController;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -14,6 +16,7 @@ import com.kcare.kcare.Product.Model.Product;
 import com.kcare.kcare.Product.Model.ProductImage;
 import com.kcare.kcare.Product.repository.ProductImageRepository;
 import com.kcare.kcare.Product.repository.ProductRepository;
+import com.kcare.kcare.common.Response;
 import com.kcare.kcare.handler.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -30,18 +33,29 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final FileStorageService fileStorageService;
 
-    public String createProduct(ProductRequest productRequest) {
+    public Response<ProductResponse> createProduct(ProductRequest productRequest, List<MultipartFile> productImages) {
 
         Product product = productMapper.toProduct(productRequest);
-        product = productRepository.save(product);
+        Product savedProduct = productRepository.save(product);
 
-        saveImage(productRequest.getImages(), product.getId());
-        return "product saved";
+        List<String> imagePaths = productImages.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .collect(Collectors.toList());
+        ProductResponse productResponse = productMapper.toProductResponse(savedProduct, imagePaths);
+
+        saveImage(productImages, product.getId());
+        return new Response<>(
+                productResponse,
+                LocalDateTime.now(),
+                "Product detail save successfully",
+                HttpStatus.CREATED
+
+        );
     }
 
-    public void saveImage(List<MultipartFile> images, Integer productId) {
+    public void saveImage(List<MultipartFile> productImages, Integer productId) {
 
-        List<String> imagesPath = fileStorageService.saveProductImages(images, productId, "productImages");
+        List<String> imagesPath = fileStorageService.saveProductImages(productImages, productId, "productImages");
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product Not Found Id: " + productId));
