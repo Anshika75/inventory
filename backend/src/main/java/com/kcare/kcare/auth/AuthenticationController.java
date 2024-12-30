@@ -28,7 +28,7 @@ public class AuthenticationController {
     private final AuthenticationService service;
 
     @Operation(summary = "Register a new user", description = "Registers a new user with the provided registration details and sends a confirmation Otp on Email")
-    @PostMapping("/Register")
+    @PostMapping("/register")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<Response<RegistrationRequest>> register(@RequestBody @Valid RegistrationRequest request)
             throws MessagingException, IOException {
@@ -36,7 +36,7 @@ public class AuthenticationController {
     }
 
     @Operation(summary = "Verify OTP", description = "Verifies the OTP provided by the user.")
-    @PostMapping("/Otp-verficiation")
+    @PostMapping("/otp-verificiation")
     public ResponseEntity<Response<OtpVerficationRequest>> otpVerification(
             @RequestBody OtpVerficationRequest otpVerficationRequest) {
         return ResponseEntity.ok(service.otpVerification(otpVerficationRequest));

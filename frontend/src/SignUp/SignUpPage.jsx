@@ -1,9 +1,12 @@
+import axios from 'axios';
 import React, { useState } from 'react';
-import KcareLogo from '/Images/Common/Logo.png'
-import RightPanel from '/Images/Common/right.png'
+import KcareLogo from '/Images/Common/Logo.png';
+import RightPanel from '/Images/Common/right.png';
 
 function SignupPage() {
   // Form state
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -12,13 +15,23 @@ function SignupPage() {
     password: '',
     confirmPassword: ''
   });
+  
+
+
 
   // Password visibility state
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Error state
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    contactNumber: '',
+    password: '',
+
+  });
 
   // Handle input changes
   const handleChange = (e) => {
@@ -127,11 +140,49 @@ function SignupPage() {
   };
 
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Handle successful validation
-      console.log('Form submitted:', formData);
+
+      setIsSubmitting(true)
+      try {
+        const response = await axios.post(
+          "http://localhost:9090/api/v1/auth/register",
+          
+          
+          {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            // contactNumber: formData.contactNumber,
+            password: formData.password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // Accept: "application/json",
+            },
+          }
+        );
+
+        localStorage.setItem("email", formData.email);
+        console.log(response)
+
+        
+    
+       
+      }catch (error) {
+        if (error.response && error.response.status === 409) {
+          setErrors((prev) => ({
+            ...prev,
+            email: "Email already exist",
+          }));
+        } else {
+          console.error("Error:", error);
+        }
+      }  finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
