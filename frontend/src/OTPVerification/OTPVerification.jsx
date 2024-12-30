@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react';
-import KcareLogo from '/Images/Common/Logo.png'
-import RightPanel from '/Images/Common/right.png'
+import axios from "axios";
+import React, { useEffect, useRef, useState } from 'react';
+import KcareLogo from '/Images/Common/Logo.png';
+import RightPanel from '/Images/Common/right.png';
 
 function OtpVerification() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -67,7 +68,7 @@ function OtpVerification() {
     inputRefs.current[focusIndex].focus();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     
     // Validate all digits are entered
@@ -75,6 +76,25 @@ function OtpVerification() {
       setError('Please enter all digits');
       return;
     }
+    try {
+      const response = await axios.post('http://localhost:9090/api/v1/auth/otp-verificiation', 
+      { "otp": otp.join(''),
+        "email": localStorage.getItem("email")
+
+       }, 
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+      console.log(response.data);
+      // Handle success response
+    } catch (error) {
+      console.error('Error:', error);
+      setError('Invalid OTP. Please try again.');
+    }
+    
 
     // Handle OTP submission
     console.log('OTP Submitted:', otp.join(''));
