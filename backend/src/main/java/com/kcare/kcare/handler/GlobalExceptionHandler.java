@@ -13,6 +13,7 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -99,7 +100,6 @@ public class GlobalExceptionHandler {
                                 ExceptionResponse.builder()
                                                 .businessErrorDescription("Email already in use")
                                                 .error(exp.getMessage())
-
                                                 .build());
         }
 
@@ -107,9 +107,9 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ExceptionResponse> handleException(AccountNotVerfiedException exp) {
                 exp.printStackTrace();
 
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
                                 ExceptionResponse.builder()
-                                                .businessErrorDescription("Account Not Varified")
+                                                .businessErrorDescription("Account Not Verified")
                                                 .error(exp.getMessage())
 
                                                 .build());
@@ -121,7 +121,7 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(
                                 ExceptionResponse.builder()
                                                 .businessErrorDescription(
-                                                                "Access Denied: You do not have the required permissions to access this resource.")
+                                                                "Access Denied")
                                                 .error(exp.getMessage())
                                                 .build());
         }
@@ -132,6 +132,17 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                                 ExceptionResponse.builder()
                                                 .businessErrorDescription("Resource Not Available in Database")
+                                                .error(exp.getMessage())
+                                                .build());
+        }
+
+        // @ExceptionHandler(ResponseStatusException.class)
+        @ExceptionHandler(ResponseStatusException.class)
+        public ResponseEntity<ExceptionResponse> handleException(ResponseStatusException exp) {
+                exp.printStackTrace();
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                                ExceptionResponse.builder()
+                                                .businessErrorDescription("Invalid Input")
                                                 .error(exp.getMessage())
                                                 .build());
         }

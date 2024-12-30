@@ -38,7 +38,7 @@ public class AuthenticationController {
     @Operation(summary = "Verify OTP", description = "Verifies the OTP provided by the user.")
     @PostMapping("/otp-verificiation")
     public ResponseEntity<Response<OtpVerficationRequest>> otpVerification(
-            @RequestBody OtpVerficationRequest otpVerficationRequest) {
+            @RequestBody @Valid OtpVerficationRequest otpVerficationRequest) {
         return ResponseEntity.ok(service.otpVerification(otpVerficationRequest));
 
     }
@@ -53,7 +53,7 @@ public class AuthenticationController {
     @Operation(summary = "Resend OTP", description = "Resends the OTP to the user's email")
 
     @PostMapping("/resendOtp")
-    public ResponseEntity<Response<ResendOtpRequest>> resendOtp(@RequestBody ResendOtpRequest resendOtpRequest)
+    public ResponseEntity<Response<ResendOtpRequest>> resendOtp(@RequestBody @Valid ResendOtpRequest resendOtpRequest)
             throws MessagingException, IOException {
         return ResponseEntity.ok(service.resendOtp(resendOtpRequest));
     }
@@ -62,7 +62,7 @@ public class AuthenticationController {
 
     @PostMapping("/initiatePasswordReset")
     public ResponseEntity<Response<ForgetPasswordRequest>> forgetPasword(
-            @RequestBody ForgetPasswordRequest forgetPassword)
+            @RequestBody @Valid ForgetPasswordRequest forgetPassword)
             throws MessagingException, IOException {
 
         return ResponseEntity.ok(service.forgetPassword(forgetPassword));
@@ -72,7 +72,7 @@ public class AuthenticationController {
 
     @PatchMapping("/setNewPasword")
     public ResponseEntity<Response<ResetPasswordRequest>> resetForgottendPassword(
-            @RequestBody ResetPasswordRequest resetPasswordRequest) {
+            @RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
 
         return ResponseEntity.ok(service.resetForgottendPassword(resetPasswordRequest));
 

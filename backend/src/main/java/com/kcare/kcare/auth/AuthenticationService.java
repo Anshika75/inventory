@@ -190,7 +190,13 @@ public class AuthenticationService {
 
         User user1 = userrepository.findByEmail(request.getEmail())
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Email or password"));
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Email "));
+
+        String password = user1.getPassword();
+
+        if (!passwordEncoder.matches(request.getPassword(), password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong Password");
+        }
 
         if (!user1.isEnabled()) {
             sendValidationEmail(user1);
@@ -233,8 +239,8 @@ public class AuthenticationService {
         return new Response<>(
                 resendOtpRequest,
                 LocalDateTime.now(),
-                "sucessfully saved",
-                HttpStatus.CREATED
+                "Otp send",
+                HttpStatus.OK
 
         );
 

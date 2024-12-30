@@ -55,10 +55,6 @@ file:
 # web.resources.static-locations=file:/path/to/your/uploads/
 
 
-
-
-
-
 # # spring.profiles.servlet.multipart.max-file-size=5MB
 # # spring.mail.host=smtp.gmail.com
 # # spring.mail.port=587

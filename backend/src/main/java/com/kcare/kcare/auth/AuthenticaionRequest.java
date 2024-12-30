@@ -17,7 +17,7 @@ public class AuthenticaionRequest {
     private String email;
 
     @NotBlank(message = "password cannot be blank")
-    @Size(min = 8, message = "Password should be minimum 8 character long")
+    @Size(max = 100, message = "limit exceeds")
     private String password;
 
 }

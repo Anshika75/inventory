@@ -1,8 +1,109 @@
-import React from 'react';
-import KcareLogo from '/Images/Common/Logo.png'
-import RightPanel from '/Images/Common/right.png'
+import axios from 'axios';
+import React, { useState } from 'react';
+import KcareLogo from '/Images/Common/Logo.png';
+import RightPanel from '/Images/Common/right.png';
 
+  
 function LoginPage() {
+
+
+  const [formData, setFormData] = useState({
+      email: '',
+      password: '',
+    });
+
+    const [errors, setErrors] = useState({
+        email: '',
+        password: '',
+    
+      });
+
+  const validateForm = () => {
+    const newErrors = {};
+
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submission
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    if (validateForm()) {
+
+      try {
+        const response = await axios.post(
+          "http://localhost:9090/api/v1/auth/login",
+          
+          {
+            email: formData.email,
+            password: formData.password,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              // Accept: "application/json",
+            },
+          }
+        );
+
+        console.log(response.data)
+       
+      }catch (error) {
+
+        if (error.response && error.response.data && error.response.data.validationErrors) {
+          const validationErrors = error.response.data.validationErrors;
+          const newErrors = {};
+          validationErrors.forEach((error) => {
+            const [field, message] = error.split(": ");
+            newErrors[field] = message;
+          });
+          setErrors(newErrors);
+        } 
+        else if(error.response.data.error=== `401 UNAUTHORIZED \"Invalid Email \"` && error.response.status === 401) {
+          setErrors((prev) => ({
+            ...prev,
+            email: "wrong email",
+          }));
+          console.log("wrong email")
+        } 
+        else if(error.response.data.error=== `401 UNAUTHORIZED \"Wrong Password\"` && error.response.status === 401) {
+          setErrors((prev) => ({
+            ...prev,
+            password: "wrong password",
+          }));
+          console.log("wrong password")
+        } 
+        
+        else if(error.response.data.businessErrorDescription=== "Account Not Verified" && error.response.status === 403) {
+          // ! redirect to otp verification page
+          // ! show email is send to you email, built settimeout
+          console.log("Email send")
+        } 
+        else {
+          console.error("Error:", error);
+        }
+      }  
+    }
+  };
+
+
+
   return (
     <div className="min-h-screen w-full flex flex-col justify-center items-center lg:flex-row">
       {/* Left Section */}
@@ -25,7 +126,7 @@ function LoginPage() {
             <p className="text-secondary font-medium">Enter your Credentials to access your account</p>
           </div>
 
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label htmlFor="email" className="block text-sm font-semibold text-secondary">
                 Email address
@@ -35,7 +136,11 @@ function LoginPage() {
                 type="email"
                 placeholder="Enter your email"
                 className="w-full px-3 py-2 border border-formBorder rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                required
+                required value={formData.email} onChange={(e)=>{
+
+                  setFormData((currentState)=>({...currentState,email:e.target.value}))
+                  
+                }}
               />
             </div>
 
@@ -56,7 +161,9 @@ function LoginPage() {
                 type="password"
                 placeholder="Enter your password"
                 className="w-full px-3 py-2 border border-formBorder rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
-                required
+                required value={formData.password} onChange={(e)=>{
+                  setFormData((currentState)=>({...currentState,password:e.target.value}))
+                }}
               />
             </div>
 
@@ -75,7 +182,7 @@ function LoginPage() {
             </div>
 
             <button 
-              type="submit"
+              type="submit" 
               className="w-full bg-primary opacity-80 transition-all hover:opacity-100 text-white py-2 px-4 rounded-md duration-200"
             >
               Login

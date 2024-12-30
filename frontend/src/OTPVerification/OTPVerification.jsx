@@ -87,7 +87,7 @@ function OtpVerification() {
           'Content-Type': 'application/json',
         }
       });
-      console.log(response.data);
+      // console.log(response.data);
       // Handle success response
     } catch (error) {
 
@@ -96,7 +96,6 @@ function OtpVerification() {
       }
       else{
         console.error('Error:', error);
-
       }
       
       
