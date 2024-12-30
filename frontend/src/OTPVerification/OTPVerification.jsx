@@ -85,19 +85,26 @@ function OtpVerification() {
       {
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
         }
       });
       console.log(response.data);
       // Handle success response
     } catch (error) {
-      console.error('Error:', error);
-      setError('Invalid OTP. Please try again.');
+
+      if(error.response.status===404 && error.response.data.businessErrorDescription=== "Invalid Otp"){
+        setError(error.response.data.businessErrorDescription);
+      }
+      else{
+        console.error('Error:', error);
+
+      }
+      
+      
     }
     
 
     // Handle OTP submission
-    console.log('OTP Submitted:', otp.join(''));
+    // console.log('OTP Submitted:', otp.join(''));
   };
 
   return (

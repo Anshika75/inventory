@@ -2,7 +2,6 @@ package com.kcare.kcare.auth;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +21,10 @@ public class ChangePasswordRequest {
     private String currentPassword;
     @Column(nullable = false)
 
-    @NotEmpty(message = "Password is mandatory")
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "newPassword should be 8 charcters long minimum")
     private String newPassword;
     @Column(nullable = false)
-    @NotEmpty(message = "Password is mandatory")
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "confirmationPassword should be 8 charcters long minimum")
     private String confirmationPassword;

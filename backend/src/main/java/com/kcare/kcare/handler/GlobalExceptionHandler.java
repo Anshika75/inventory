@@ -1,7 +1,8 @@
 package com.kcare.kcare.handler;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,15 +55,19 @@ public class GlobalExceptionHandler {
 
         @ExceptionHandler(MethodArgumentNotValidException.class)
         public ResponseEntity<ExceptionResponse> handleException(MethodArgumentNotValidException exp) {
-                Set<String> errors = new HashSet<>();
-                exp.getBindingResult().getAllErrors().forEach(
-                                error -> {
-                                        var errorMessage = error.getDefaultMessage();
-                                        errors.add(errorMessage);
-                                });
+                Map<String, String> validationErrors = new HashMap<>();
+
+                // Extract field-specific errors
+                exp.getBindingResult().getFieldErrors().forEach(error -> {
+                        validationErrors.put(error.getField(), error.getDefaultMessage());
+                });
+
+                // Build the response
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                                 ExceptionResponse.builder()
-                                                .validationErrors(errors)
+                                                .validationErrors(validationErrors.entrySet().stream()
+                                                                .map(entry -> entry.getKey() + ": " + entry.getValue())
+                                                                .collect(Collectors.toSet()))
                                                 .build());
         }
 

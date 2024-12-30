@@ -104,7 +104,7 @@ public class AuthenticationService {
         return new Response<>(
                 request,
                 LocalDateTime.now(),
-                "sucessfully saved",
+                "sucessfully registered",
                 HttpStatus.CREATED
 
         );
@@ -292,7 +292,7 @@ public class AuthenticationService {
         return new Response<>(
                 resetPasswordRequest,
                 LocalDateTime.now(),
-                "sucessfully saved",
+                "sucessfully reset",
                 HttpStatus.CREATED
 
         );
@@ -318,7 +318,7 @@ public class AuthenticationService {
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid Otp"));
 
         User user = userrepository.findById(savedToken.getUser().getId())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Invalid User"));
         if (!user.getEmail().equals(otpVerficationRequest.getEmail())) {
             throw new IllegalArgumentException("Invalid Otp");
         }
@@ -337,8 +337,8 @@ public class AuthenticationService {
         return new Response<>(
                 otpVerficationRequest,
                 LocalDateTime.now(),
-                "sucessfully saved",
-                HttpStatus.CREATED
+                "verified",
+                HttpStatus.ACCEPTED
 
         );
     }

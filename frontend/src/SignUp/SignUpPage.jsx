@@ -166,12 +166,22 @@ function SignupPage() {
         );
 
         localStorage.setItem("email", formData.email);
-        console.log(response)
+        // console.log(response)
 
         
     
        
       }catch (error) {
+
+        if (error.response && error.response.data && error.response.data.validationErrors) {
+          const validationErrors = error.response.data.validationErrors;
+          const newErrors = {};
+          validationErrors.forEach((error) => {
+            const [field, message] = error.split(": ");
+            newErrors[field] = message;
+          });
+          setErrors(newErrors);
+        } 
         if (error.response && error.response.status === 409) {
           setErrors((prev) => ({
             ...prev,

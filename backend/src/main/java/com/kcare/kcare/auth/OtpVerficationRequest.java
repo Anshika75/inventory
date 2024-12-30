@@ -2,7 +2,6 @@ package com.kcare.kcare.auth;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -23,9 +22,8 @@ public class OtpVerficationRequest {
     @Pattern(regexp = "\\d{6}", message = "OTP must be a 6-digit number")
     private String otp;
 
-    @NotEmpty(message = "Phone Number should not Empty")
-    @NotBlank(message = "Phone Number should not Blank")
-    @Email(message = "Please provide the valid Email")
+    @NotBlank(message = "Invalid Email")
+    @Email(message = "Invalid Email")
     private String email;
 
 }
