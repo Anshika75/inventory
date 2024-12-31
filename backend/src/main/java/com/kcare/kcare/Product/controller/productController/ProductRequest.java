@@ -17,11 +17,16 @@ public class ProductRequest {
 
     private List<MultipartFile> images;
     private String productName;
-    private String category;
+    private String productCategory;
     private Integer buyingPrice;
     private Integer quantity;
     private Integer unit;
     private LocalDate expiryDate;
     private Integer thresholdValue;
+
+    private String supplierName;
+    private String phoneNumber;
+    private String supplierCategory;
+    private Integer sellingPrices;
 
 }

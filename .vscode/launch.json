@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-KcareApplication<kcare>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.kcare.kcare.KcareApplication",
+            "projectName": "kcare",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

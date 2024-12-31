@@ -1,5 +1,6 @@
 package com.kcare.kcare.Product.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.kcare.kcare.common.BaseEntity;
 
 import jakarta.persistence.Entity;
@@ -27,6 +28,7 @@ public class ProductImage extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
+    @JsonBackReference
     private Product product;
 
 }

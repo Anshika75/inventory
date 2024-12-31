@@ -9,8 +9,8 @@ public class SupplierMapper {
 
     public Supplier toSupplier(SupplierRequest supplierRequest) {
         return Supplier.builder()
-                .image(supplierRequest.getImage())
-                .name(supplierRequest.getImage())
+                .businessCard(supplierRequest.getBusinessCard())
+                .supplierName(supplierRequest.getSupplierName())
                 .phoneNumber(supplierRequest.getPhoneNumber())
                 .build();
     }
