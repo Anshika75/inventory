@@ -75,7 +75,7 @@ function LoginPage() {
           });
           setErrors(newErrors);
         } 
-        else if(error.response.data.error=== `401 UNAUTHORIZED \"Invalid Email \"` && error.response.status === 401) {
+        else if(error.response.data.error=== `401 UNAUTHORIZED \"Wrong Email \"` && error.response.status === 401) {
           setErrors((prev) => ({
             ...prev,
             email: "wrong email",
@@ -92,11 +92,15 @@ function LoginPage() {
         
         else if(error.response.data.businessErrorDescription=== "Account Not Verified" && error.response.status === 403) {
           // ! redirect to otp verification page
-          // ! show email is send to you email, built settimeout
+          // ! show otp is send to you email, 
           console.log("Email send")
         } 
         else {
           console.error("Error:", error);
+          setErrors((prev) => ({
+            ...prev,
+            general: "An internal error occurred. Please contact the admin.",
+          }));
         }
       }  
     }

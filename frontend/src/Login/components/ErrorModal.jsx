@@ -73,7 +73,7 @@ function LoginPage() {
               const [field, message] = err.split(": ");
               newErrors[field] = message;
             });
-          } else if (errorMessage === '401 UNAUTHORIZED "Invalid Email"' && error.response.status === 401) {
+          } else if (errorMessage === '401 UNAUTHORIZED "Wrong Email"' && error.response.status === 401) {
             newErrors.email = 'Wrong email';
           } else if (errorMessage === '401 UNAUTHORIZED "Wrong Password"' && error.response.status === 401) {
             newErrors.password = 'Wrong password';

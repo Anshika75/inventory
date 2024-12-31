@@ -80,13 +80,16 @@ function OtpVerification() {
       const response = await axios.post('http://localhost:9090/api/v1/auth/otp-verificiation', 
       { "otp": otp.join(''),
         "email": localStorage.getItem("email")
-
        }, 
       {
         headers: {
           'Content-Type': 'application/json',
         }
       });
+
+      if(response.data.status==200){
+        localStorage.removeItem("email")
+      }
       // console.log(response.data);
       // Handle success response
     } catch (error) {
@@ -97,6 +100,7 @@ function OtpVerification() {
       else{
         console.error('Error:', error);
       }
+
       
       
     }

@@ -27,8 +27,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -51,25 +51,25 @@ public class User implements UserDetails, Principal {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @NotNull(message = "FirstName should not be null")
-    @NotEmpty(message = "FirstName should not be empty")
-    @Size(min = 2, max = 50, message = "FirstName should be between 2 and 50 characters")
-
+    @NotBlank(message = "FirstName should not be Blank")
+    @Size(min = 2, message = "Must contain more than 2 letters")
+    @Size(max = 50, message = "limit exceeds")
     private String firstName;
-    @NotNull(message = "LastName should not be null")
-    @NotEmpty(message = "LastName should not be empty")
-    @Size(min = 2, max = 50, message = "LastName should be between 2 and 50 characters")
+
+    @NotBlank(message = "LastName should not be Blank")
+    @Size(min = 2, max = 50, message = "Must contain more than 2 letters")
+    @Size(max = 50, message = "limit exceeds")
     private String lastName;
 
     @Column(name = "Email", unique = true)
-    @NotNull(message = "Email should not be null")
     @NotEmpty(message = "Email should not be empty")
     @Email(message = "Please provide a valid email address")
+    @Size(max = 50, message = "Word limit exceeds")
     private String email;
 
-    @NotNull(message = "Password should not be null")
-    @NotEmpty(message = "Password should not be empty")
-    @Size(min = 8, message = "Password should be at least 8 characters long")
+    @NotBlank(message = "Password is mandatory")
+    // @Size(min = 8, max = 50, message = "Password should be between 8 and 50
+    // characters long")
     private String password;
 
     private boolean accountLocked;
