@@ -16,9 +16,22 @@ public class DepartmentMapper {
                 .Location(departmentRequest.getLocation())
                 .departmentHead(departmentRequest.getDepartmentHead())
                 .departmentHeadContactNumber(departmentRequest.getDepartmentHeadContactNumber())
-
                 .departmentHeadMail(departmentRequest.getDepartmentHeadMail())
                 .activeSinceDate(departmentRequest.getActiveSinceDate())
+                .build();
+    }
+
+    public DepartmentResponse toDoDepartmentResponse(Department department) {
+        return DepartmentResponse.builder()
+                .id(department.getId())
+                .departmentName(department.getDepartmentName())
+                .departmentMail(department.getDepartmentMail())
+                .contactNumber(department.getContactNumber())
+                .Location(department.getLocation())
+                .departmentHead(department.getDepartmentHead())
+                .departmentHeadContactNumber(department.getDepartmentHeadContactNumber())
+                .departmentHeadMail(department.getDepartmentHeadMail())
+                .activeSinceDate(department.getActiveSinceDate())
                 .build();
     }
 

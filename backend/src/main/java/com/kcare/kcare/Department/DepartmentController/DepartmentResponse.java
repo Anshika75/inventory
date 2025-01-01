@@ -6,12 +6,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Builder
 @Getter
 @Setter
+@Builder
+public class DepartmentResponse {
 
-public class DepartmentRequest {
-
+    private Integer id;
     private String image;
     private String departmentName;
     private String departmentMail;
