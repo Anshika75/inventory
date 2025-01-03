@@ -1,10 +1,12 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import KcareLogo from '/Images/Common/Logo.png';
 import RightPanel from '/Images/Common/right.png';
 
 function SignupPage() {
   // Form state
+  const navigate = useNavigate();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -166,7 +168,14 @@ function SignupPage() {
         );
 
         localStorage.setItem("email", formData.email);
-        // console.log(response)
+
+        // console.log(response);
+        // console.log("status is : ",response.data.status)
+
+        if(response.status===200 && response.data.status==="CREATED"){
+          // console.log("login successfull")
+          navigate("/verify-email");
+        }
 
         
     

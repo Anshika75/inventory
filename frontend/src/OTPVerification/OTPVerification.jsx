@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import KcareLogo from '/Images/Common/Logo.png';
 import RightPanel from '/Images/Common/right.png';
 
@@ -7,6 +8,7 @@ function OtpVerification() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const inputRefs = useRef([]);
+  const navigate= useNavigate();
 
   // Initialize refs array
   useEffect(() => {
@@ -87,8 +89,11 @@ function OtpVerification() {
         }
       });
 
-      if(response.data.status==200){
+
+      if(response.status===200 && response.data.status==="ACCEPTED"){
         localStorage.removeItem("email")
+        navigate("/login")
+        
       }
       // console.log(response.data);
       // Handle success response

@@ -1,7 +1,8 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import NewSupplierModal from './NewSupplierModal';
 
 function Suppliers() {
+
   const [suppliers, setSuppliers] = useState([
     { id: 1, name: 'John Doe', contactNumber: '1234567890', deliveryTime: '3 days', successfulOrders: 50, costPerUnit: 10, threshold: 100 },
     { id: 2, name: 'Jane Smith', contactNumber: '9876543210', deliveryTime: '1 day', successfulOrders: 75, costPerUnit: 12, threshold: 150 },

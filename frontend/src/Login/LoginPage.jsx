@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import KcareLogo from '/Images/Common/Logo.png';
 import RightPanel from '/Images/Common/right.png';
 
   
 function LoginPage() {
 
+  const navigate= useNavigate();
 
   const [formData, setFormData] = useState({
       email: '',
@@ -62,7 +64,10 @@ function LoginPage() {
           }
         );
 
-        console.log(response.data)
+        if(response.status=200){
+          navigate("/product")
+
+        }
        
       }catch (error) {
 
@@ -91,9 +96,7 @@ function LoginPage() {
         } 
         
         else if(error.response.data.businessErrorDescription=== "Account Not Verified" && error.response.status === 403) {
-          // ! redirect to otp verification page
-          // ! show otp is send to you email, 
-          console.log("Email send")
+          navigate("/verify-email")
         } 
         else {
           console.error("Error:", error);
