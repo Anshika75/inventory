@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TokenRepository extends JpaRepository<Token, Integer> {
 
     Optional<Token> findByToken(String otp);
+
     // Optional<Token> findByUserEmailAndToken(String email, String token);
 
     // Optional<Token> findByUserContactNumberAndToken(String phoneNumber, String

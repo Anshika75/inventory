@@ -25,7 +25,7 @@ public class SupplierService {
         return new Response<>(
                 supplierRequest,
                 LocalDateTime.now(),
-                "Supplier detail successfully saved",
+                "Supplier detail saved",
                 HttpStatus.CREATED
 
         );

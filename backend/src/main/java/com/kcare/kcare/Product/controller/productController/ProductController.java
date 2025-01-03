@@ -27,9 +27,8 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping(path = "/saveProduct", consumes = "multipart/form-data")
-    public ResponseEntity<Response<ProductResponse>> createProduct(@RequestBody ProductRequest productRequest,
+    public ResponseEntity<Response<ProductRequest>> createProduct(@RequestBody ProductRequest productRequest,
             @RequestPart("file") List<MultipartFile> file) {
-
         return ResponseEntity.ok(productService.createProduct(productRequest, file));
     }
 
@@ -37,10 +36,14 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getProductImageById(@PathVariable("productId") Integer productId) {
 
         ProductResponse productResponse = productService.getProductImageById(productId);
-
         return ResponseEntity.ok()
                 .body(productResponse);
 
     }
+
+    // @GetMapping("/getAll")
+    // public String getMethodName(@RequestParam String param) {
+    // return new String();
+    // }
 
 }

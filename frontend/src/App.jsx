@@ -1,9 +1,8 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
 import LoginPage from './Login/LoginPage'
-import MainPage from './ProductMainPage/MainPage'
-import SignupPage from './SignUp/SignUpPage'
 import OtpVerification from './OTPVerification/OTPVerification'
 import ProductMainPage from './ProductMainPage/MainPage'
+import SignupPage from './SignUp/SignUpPage'
 
 // Protected Route wrapper component
 const ProtectedRoute = ({ children }) => {

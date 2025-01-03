@@ -9,8 +9,8 @@ import lombok.Setter;
 @Builder
 public class SupplierRequest {
 
-    private String image;
-    private String name;
+    private String businessCard;
+    private String supplierName;
     private String phoneNumber;
 
 }

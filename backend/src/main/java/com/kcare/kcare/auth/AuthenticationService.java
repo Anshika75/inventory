@@ -190,7 +190,7 @@ public class AuthenticationService {
 
         User user1 = userrepository.findByEmail(request.getEmail())
                 .orElseThrow(
-                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Email "));
+                        () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Wrong Email "));
 
         String password = user1.getPassword();
 

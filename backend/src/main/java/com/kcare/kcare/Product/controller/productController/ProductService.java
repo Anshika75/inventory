@@ -18,6 +18,8 @@ import com.kcare.kcare.Product.repository.ProductImageRepository;
 import com.kcare.kcare.Product.repository.ProductRepository;
 import com.kcare.kcare.common.Response;
 import com.kcare.kcare.handler.ResourceNotFoundException;
+import com.kcare.kcare.supplier.Model.Supplier;
+import com.kcare.kcare.supplier.Model.SupplierRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -32,20 +34,27 @@ public class ProductService {
     private final ProductImageRepository productImageRepository;
     private final ProductMapper productMapper;
     private final FileStorageService fileStorageService;
+    private final SupplierRepository supplierRepository;
 
-    public Response<ProductResponse> createProduct(ProductRequest productRequest, List<MultipartFile> productImages) {
+    public Response<ProductRequest> createProduct(ProductRequest productRequest, List<MultipartFile> productImages) {
 
         Product product = productMapper.toProduct(productRequest);
         Product savedProduct = productRepository.save(product);
 
-        List<String> imagePaths = productImages.stream()
-                .map(MultipartFile::getOriginalFilename)
-                .collect(Collectors.toList());
-        ProductResponse productResponse = productMapper.toProductResponse(savedProduct, imagePaths);
+        Supplier supplier = productMapper.toSupplier(productRequest, savedProduct);
+        supplierRepository.save(supplier);
+        saveImage(productImages, savedProduct.getId());
 
-        saveImage(productImages, product.getId());
+        // List<String> imagePaths = productImages.stream()
+        // .map(MultipartFile::getOriginalFilename)
+        // .collect(Collectors.toList());
+        // ProductResponse productResponse =
+        // productMapper.toProductResponse(savedProduct, imagePaths, savedSupplier);
+
+        // savedSupplier.setProduct(savedProduct);
+
         return new Response<>(
-                productResponse,
+                productRequest,
                 LocalDateTime.now(),
                 "Product detail save successfully",
                 HttpStatus.CREATED
@@ -71,26 +80,25 @@ public class ProductService {
     }
 
     public ProductResponse getProductImageById(Integer productId) {
+
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product Not availabe for Id :" + productId));
-
         List<ProductImage> allImages = productImageRepository.findAllByProductId(productId);
 
         if (allImages.isEmpty()) {
             throw new ResourceNotFoundException("Images Not available for Product: " + productId);
         }
-
         List<String> allImageUrls = allImages.stream()
                 .map(image -> {
                     Path normalizedPath = Paths.get(image.getImagePath()).normalize();
                     String relativePath = normalizedPath.toString().replace("\\", "/");
                     String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
                     return baseUrl + "/" + relativePath;
-
                 })
                 .collect(Collectors.toList());
 
-        ProductResponse productResponse = productMapper.toProductResponse(product, allImageUrls);
+        List<Supplier> supplier = supplierRepository.findAllByProductId(product.getId());
+        ProductResponse productResponse = productMapper.toProductResponse(product, allImageUrls, supplier);
 
         return productResponse;
 

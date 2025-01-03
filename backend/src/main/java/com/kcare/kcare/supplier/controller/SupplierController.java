@@ -18,9 +18,8 @@ public class SupplierController {
 
     private final SupplierService supplierService;
 
-    @PostMapping("/")
+    @PostMapping("/saveSupplierDetail")
     public ResponseEntity<Response<SupplierRequest>> saveSupplierDetail(@RequestBody SupplierRequest supplierRequest) {
-
         return ResponseEntity.ok(supplierService.saveSupplierDetail(supplierRequest));
     }
 

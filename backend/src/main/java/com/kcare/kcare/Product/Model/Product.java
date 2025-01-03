@@ -3,7 +3,9 @@ package com.kcare.kcare.Product.Model;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kcare.kcare.common.BaseEntity;
+import com.kcare.kcare.supplier.Model.Supplier;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,7 +28,7 @@ import lombok.experimental.SuperBuilder;
 public class Product extends BaseEntity {
 
     private String productName;
-    private String category;
+    private String productCategory;
     private Integer buyingPrice;
     private Integer quantity;
     private Integer unit;
@@ -34,6 +36,11 @@ public class Product extends BaseEntity {
     private Integer thresholdValue;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<ProductImage> image;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Supplier> suppliers;
 
 }

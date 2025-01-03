@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import KcareLogo from '/Images/Common/Logo.png';
 import RightPanel from '/Images/Common/right.png';
 
@@ -7,6 +8,7 @@ function OtpVerification() {
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [error, setError] = useState('');
   const inputRefs = useRef([]);
+  const navigate= useNavigate();
 
   // Initialize refs array
   useEffect(() => {
@@ -80,13 +82,19 @@ function OtpVerification() {
       const response = await axios.post('http://localhost:9090/api/v1/auth/otp-verificiation', 
       { "otp": otp.join(''),
         "email": localStorage.getItem("email")
-
        }, 
       {
         headers: {
           'Content-Type': 'application/json',
         }
       });
+
+
+      if(response.status===200 && response.data.status==="ACCEPTED"){
+        localStorage.removeItem("email")
+        navigate("/login")
+        
+      }
       // console.log(response.data);
       // Handle success response
     } catch (error) {
@@ -97,6 +105,7 @@ function OtpVerification() {
       else{
         console.error('Error:', error);
       }
+
       
       
     }
