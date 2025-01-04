@@ -13,19 +13,17 @@ spring:
       max-request-size: 200MB
   mvc:
     static-path-pattern: /uploads/**
-
-
   web:
     resources:
       static-locations: file:./uploads/
   datasource:
-    url: jdbc:postgresql://ep-muddy-smoke-a19d0spv.ap-southeast-1.aws.neon.tech/neondb?sslmode=require
-    username: neondb_owner
-    password: UH2DTLItCkc7
+    url: jdbc:postgresql://ep-divine-king-a4p3jg6b.us-east-1.aws.neon.tech/neondb?sslmode=require
+    username: neondb_owner  
+    password: NTmr8fB7Vcdh  
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: create 
+      ddl-auto: update 
   mail:
     host: smtp.gmail.com
     port: 587

@@ -3,9 +3,15 @@ package com.kcare.kcare.Product.controller.productController;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +22,7 @@ import com.kcare.kcare.Product.Model.Product;
 import com.kcare.kcare.Product.Model.ProductImage;
 import com.kcare.kcare.Product.repository.ProductImageRepository;
 import com.kcare.kcare.Product.repository.ProductRepository;
+import com.kcare.kcare.common.PageResponse;
 import com.kcare.kcare.common.Response;
 import com.kcare.kcare.handler.ResourceNotFoundException;
 import com.kcare.kcare.supplier.Model.Supplier;
@@ -26,8 +33,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -101,7 +108,55 @@ public class ProductService {
         ProductResponse productResponse = productMapper.toProductResponse(product, allImageUrls, supplier);
 
         return productResponse;
-
     }
 
+    public PageResponse<ProductResponse> getAllProduct(String productName, int page, int size) {
+
+        Specification<Product> spec = Specification.where(null);
+        if (productName != null) {
+            spec = spec.and(ProductSpecification.withProductName(productName));
+        }
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by("productName").descending());
+
+        Page<Product> pagedProducts = productRepository.findAll(spec, pageable);
+        if (pagedProducts.isEmpty()) {
+            throw new ResourceNotFoundException("Product Not Available in database");
+        }
+
+        List<ProductResponse> productResponse = pagedProducts.stream().map(product -> {
+
+            List<ProductImage> allImages = productImageRepository.findAllByProductId(product.getId());
+            List<String> allImageUrls = new ArrayList<>();
+            if (!allImageUrls.isEmpty()) {
+                allImageUrls = allImages.stream()
+                        .map(image -> {
+                            Path normalizedPath = Paths.get(image.getImagePath()).normalize();
+                            String relativePath = normalizedPath.toString().replace("\\", "/");
+                            String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+                            return baseUrl + "/" + relativePath;
+                        })
+                        .collect(Collectors.toList());
+
+            }
+            List<Supplier> suppliers = supplierRepository.findAllByProductId(product.getId());
+
+            ProductResponse newProductResponse = productMapper.toProductResponse(product,
+                    allImageUrls, suppliers);
+            return newProductResponse;
+
+        }).collect(Collectors.toList());
+
+        return new PageResponse<>(
+                productResponse,
+                pagedProducts.getNumber(),
+                pagedProducts.getSize(),
+                pagedProducts.getTotalElements(),
+                pagedProducts.getTotalPages(),
+                pagedProducts.isFirst(),
+                pagedProducts.isLast()
+
+        );
+
+    }
 }
