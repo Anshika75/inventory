@@ -30,7 +30,7 @@ public class ProductController {
 
     @PostMapping(path = "/saveProduct", consumes = "multipart/form-data")
     public ResponseEntity<Response<ProductRequest>> createProduct(@RequestBody ProductRequest productRequest,
-            @RequestPart("file") List<MultipartFile> file) {
+            @RequestPart(name = "file", required = false) List<MultipartFile> file) {
         return ResponseEntity.ok(productService.createProduct(productRequest, file));
     }
 

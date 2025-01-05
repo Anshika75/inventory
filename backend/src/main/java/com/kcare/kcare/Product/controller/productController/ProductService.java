@@ -20,8 +20,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.kcare.kcare.File.FileStorageService;
 import com.kcare.kcare.Product.Model.Product;
 import com.kcare.kcare.Product.Model.ProductImage;
+import com.kcare.kcare.Product.Model.ProductSubpart;
 import com.kcare.kcare.Product.repository.ProductImageRepository;
 import com.kcare.kcare.Product.repository.ProductRepository;
+import com.kcare.kcare.Product.repository.ProductSubpartRepository;
 import com.kcare.kcare.common.PageResponse;
 import com.kcare.kcare.common.Response;
 import com.kcare.kcare.handler.ResourceNotFoundException;
@@ -42,6 +44,7 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final FileStorageService fileStorageService;
     private final SupplierRepository supplierRepository;
+    private final ProductSubpartRepository productSubPartRepository;
 
     public Response<ProductRequest> createProduct(ProductRequest productRequest, List<MultipartFile> productImages) {
 
@@ -50,23 +53,23 @@ public class ProductService {
 
         Supplier supplier = productMapper.toSupplier(productRequest, savedProduct);
         supplierRepository.save(supplier);
-        saveImage(productImages, savedProduct.getId());
 
-        // List<String> imagePaths = productImages.stream()
-        // .map(MultipartFile::getOriginalFilename)
-        // .collect(Collectors.toList());
-        // ProductResponse productResponse =
-        // productMapper.toProductResponse(savedProduct, imagePaths, savedSupplier);
+        if (productImages != null) {
+            saveImage(productImages, savedProduct.getId());
+        }
 
-        // savedSupplier.setProduct(savedProduct);
+        if (productRequest.getParentProductId() != null) {
+            Product parentProduct = productRepository.findById(productRequest.getParentProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("Main/Parent Does Not Exist"));
+            ProductSubpart productSubpart = productMapper.toProductSubPart(savedProduct.getId(), parentProduct);
+            productSubPartRepository.save(productSubpart);
+        }
 
         return new Response<>(
                 productRequest,
                 LocalDateTime.now(),
                 "Product detail save successfully",
-                HttpStatus.CREATED
-
-        );
+                HttpStatus.CREATED);
     }
 
     public void saveImage(List<MultipartFile> productImages, Integer productId) {
@@ -91,21 +94,37 @@ public class ProductService {
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new EntityNotFoundException("Product Not availabe for Id :" + productId));
         List<ProductImage> allImages = productImageRepository.findAllByProductId(productId);
+        List<String> allImageUrls;
 
-        if (allImages.isEmpty()) {
-            throw new ResourceNotFoundException("Images Not available for Product: " + productId);
+        if (!allImages.isEmpty()) {
+
+            allImageUrls = allImages.stream()
+                    .map(image -> {
+                        Path normalizedPath = Paths.get(image.getImagePath()).normalize();
+                        String relativePath = normalizedPath.toString().replace("\\", "/");
+                        String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
+                        return baseUrl + "/" + relativePath;
+                    })
+                    .collect(Collectors.toList());
+        } else {
+            allImageUrls = List.of();
         }
-        List<String> allImageUrls = allImages.stream()
-                .map(image -> {
-                    Path normalizedPath = Paths.get(image.getImagePath()).normalize();
-                    String relativePath = normalizedPath.toString().replace("\\", "/");
-                    String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString();
-                    return baseUrl + "/" + relativePath;
-                })
-                .collect(Collectors.toList());
+
+        List<ProductSubpart> productSubparts = productSubPartRepository.findAllByProductId(productId);
+
+        List<ProductSubpartResponse> productSubpartResponses = productSubparts.stream().map(p -> {
+
+            Product partsofProduct = productRepository.findById(p.getSubProductId())
+                    .orElseThrow(() -> new EntityNotFoundException("Product Does Not Exist"));
+
+            ProductSubpartResponse productSubpartResponse = productMapper.toProductSubpartResponse(p,
+                    partsofProduct.getProductName());
+            return productSubpartResponse;
+        }).collect(Collectors.toList());
 
         List<Supplier> supplier = supplierRepository.findAllByProductId(product.getId());
-        ProductResponse productResponse = productMapper.toProductResponse(product, allImageUrls, supplier);
+        ProductResponse productResponse = productMapper.toProductResponse(product, allImageUrls, supplier,
+                productSubpartResponses);
 
         return productResponse;
     }
@@ -141,8 +160,18 @@ public class ProductService {
             }
             List<Supplier> suppliers = supplierRepository.findAllByProductId(product.getId());
 
-            ProductResponse newProductResponse = productMapper.toProductResponse(product,
-                    allImageUrls, suppliers);
+            List<ProductSubpart> productSubparts = productSubPartRepository.findAllByProductId(product.getId());
+            List<ProductSubpartResponse> productSubpartResponses = productSubparts.stream().map(p -> {
+
+                Product partsofProduct = productRepository.findById(p.getSubProductId())
+                        .orElseThrow(() -> new EntityNotFoundException("Product Does Not Exist"));
+
+                ProductSubpartResponse productSubpartResponse = productMapper.toProductSubpartResponse(p,
+                        partsofProduct.getProductName());
+                return productSubpartResponse;
+            }).collect(Collectors.toList());
+            ProductResponse newProductResponse = productMapper.toProductResponse(product, allImageUrls, suppliers,
+                    productSubpartResponses);
             return newProductResponse;
 
         }).collect(Collectors.toList());

@@ -75,14 +75,12 @@ public class FileStorageService {
 
         if (fileName == null || fileName.isEmpty()) {
             return "";
-
         }
         int lastDotIndex = fileName.lastIndexOf(".");
         if (lastDotIndex == -1) {
             return "";
         }
         return fileName.substring(lastDotIndex + 1).toLowerCase();
-
     };
 
     public void deleteFile(String filePath) throws IOException {

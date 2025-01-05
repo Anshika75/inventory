@@ -25,6 +25,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @Entity
 @Table(name = "product")
+
 public class Product extends BaseEntity {
 
     private String productName;
@@ -34,6 +35,7 @@ public class Product extends BaseEntity {
     private Integer unit;
     private LocalDate expiryDate;
     private Integer thresholdValue;
+    // private boolean isSubPart;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
@@ -42,5 +44,9 @@ public class Product extends BaseEntity {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Supplier> suppliers;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ProductSubpart> productSubPart;
 
 }

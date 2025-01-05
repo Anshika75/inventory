@@ -15,6 +15,7 @@ import lombok.Setter;
 
 public class ProductRequest {
 
+    // ! product Details
     private List<MultipartFile> images;
     private String productName;
     private String productCategory;
@@ -23,7 +24,9 @@ public class ProductRequest {
     private Integer unit;
     private LocalDate expiryDate;
     private Integer thresholdValue;
+    private Integer parentProductId;
 
+    // ! supplier Detail
     private String supplierName;
     private String phoneNumber;
     private String supplierCategory;

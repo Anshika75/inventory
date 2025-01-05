@@ -12,10 +12,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-// @NoArgsConstructor
 
 public class ProductResponse {
 
+    private Integer productId;
     private String productName;
     private String category;
     private Integer buyingPrice;
@@ -24,9 +24,7 @@ public class ProductResponse {
     private LocalDate expiryDate;
     private Integer thresholdValue;
     private List<String> images;
-    // private List<Supplier> suppliers;
-    // private String supplierName;
-    // private String supplierPhoneNumber;
     private List<Supplier> suppliers;
+    private List<ProductSubpartResponse> productSubparts;
 
 }

@@ -5,13 +5,21 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kcare.kcare.Product.Model.Product;
+import com.kcare.kcare.Product.Model.ProductSubpart;
+import com.kcare.kcare.Product.repository.ProductRepository;
+import com.kcare.kcare.Product.repository.ProductSubpartRepository;
 import com.kcare.kcare.supplier.Model.Supplier;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductMapper {
 
-    public Product toProduct(ProductRequest request) {
+    private final ProductSubpartRepository productSubpartRepository;
+    private final ProductRepository productRepository;
 
+    public Product toProduct(ProductRequest request) {
         return Product.builder()
                 .productName(request.getProductName())
                 .productCategory(request.getProductCategory())
@@ -21,7 +29,6 @@ public class ProductMapper {
                 .expiryDate(request.getExpiryDate())
                 .thresholdValue(request.getThresholdValue())
                 .build();
-
     }
 
     public Supplier toSupplier(ProductRequest request, Product product) {
@@ -34,8 +41,10 @@ public class ProductMapper {
                 .build();
     }
 
-    public ProductResponse toProductResponse(Product product, List<String> images, List<Supplier> supplier) {
+    public ProductResponse toProductResponse(Product product, List<String> images, List<Supplier> supplier,
+            List<ProductSubpartResponse> productSubpartResponses) {
         return ProductResponse.builder()
+                .productId(product.getId())
                 .productName(product.getProductName())
                 // .productC(product.getCategory())
                 .buyingPrice(product.getBuyingPrice())
@@ -45,8 +54,26 @@ public class ProductMapper {
                 .thresholdValue(product.getThresholdValue())
                 .images(images)
                 .suppliers(supplier)
+                .productSubparts(productSubpartResponses)
                 .build();
 
+    }
+
+    public ProductSubpart toProductSubPart(Integer productId, Product parentProduct) {
+
+        return ProductSubpart.builder()
+                .subProductId(productId)
+                .product(parentProduct)
+                .build();
+
+    }
+
+    public ProductSubpartResponse toProductSubpartResponse(ProductSubpart productSubpart, String productName) {
+        return ProductSubpartResponse.builder()
+                .id(productSubpart.getId())
+                .productId(productSubpart.getSubProductId())
+                .productName(productName)
+                .build();
     }
 
 }
