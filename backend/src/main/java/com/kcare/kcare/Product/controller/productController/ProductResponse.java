@@ -3,6 +3,7 @@ package com.kcare.kcare.Product.controller.productController;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.kcare.kcare.Product.Model.ProductAttribute;
 import com.kcare.kcare.supplier.Model.Supplier;
 
 import lombok.Builder;
@@ -26,5 +27,6 @@ public class ProductResponse {
     private List<String> images;
     private List<Supplier> suppliers;
     private List<ProductSubpartResponse> productSubparts;
+    private List<ProductAttribute> productAttributes;
 
 }

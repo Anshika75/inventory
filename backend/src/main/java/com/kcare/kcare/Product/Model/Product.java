@@ -49,4 +49,8 @@ public class Product extends BaseEntity {
     @JsonManagedReference
     private List<ProductSubpart> productSubPart;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<ProductAttribute> productAttributes;
+
 }

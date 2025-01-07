@@ -19,8 +19,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.kcare.kcare.File.FileStorageService;
 import com.kcare.kcare.Product.Model.Product;
+import com.kcare.kcare.Product.Model.ProductAttribute;
 import com.kcare.kcare.Product.Model.ProductImage;
 import com.kcare.kcare.Product.Model.ProductSubpart;
+import com.kcare.kcare.Product.repository.ProductAttributeRepository;
 import com.kcare.kcare.Product.repository.ProductImageRepository;
 import com.kcare.kcare.Product.repository.ProductRepository;
 import com.kcare.kcare.Product.repository.ProductSubpartRepository;
@@ -45,12 +47,11 @@ public class ProductService {
     private final FileStorageService fileStorageService;
     private final SupplierRepository supplierRepository;
     private final ProductSubpartRepository productSubPartRepository;
+    private final ProductAttributeRepository productAttributeRepository;
 
     public Response<ProductRequest> createProduct(ProductRequest productRequest, List<MultipartFile> productImages) {
-
         Product product = productMapper.toProduct(productRequest);
         Product savedProduct = productRepository.save(product);
-
         Supplier supplier = productMapper.toSupplier(productRequest, savedProduct);
         supplierRepository.save(supplier);
 
@@ -64,7 +65,6 @@ public class ProductService {
             ProductSubpart productSubpart = productMapper.toProductSubPart(savedProduct.getId(), parentProduct);
             productSubPartRepository.save(productSubpart);
         }
-
         return new Response<>(
                 productRequest,
                 LocalDateTime.now(),
@@ -109,6 +109,7 @@ public class ProductService {
         } else {
             allImageUrls = List.of();
         }
+        List<ProductAttribute> productAttributes = productAttributeRepository.findAllByProductId(product.getId());
 
         List<ProductSubpart> productSubparts = productSubPartRepository.findAllByProductId(productId);
 
@@ -124,7 +125,7 @@ public class ProductService {
 
         List<Supplier> supplier = supplierRepository.findAllByProductId(product.getId());
         ProductResponse productResponse = productMapper.toProductResponse(product, allImageUrls, supplier,
-                productSubpartResponses);
+                productSubpartResponses, productAttributes);
 
         return productResponse;
     }
@@ -139,12 +140,12 @@ public class ProductService {
                 Sort.by("productName").descending());
 
         Page<Product> pagedProducts = productRepository.findAll(spec, pageable);
+
         if (pagedProducts.isEmpty()) {
             throw new ResourceNotFoundException("Product Not Available in database");
         }
 
         List<ProductResponse> productResponse = pagedProducts.stream().map(product -> {
-
             List<ProductImage> allImages = productImageRepository.findAllByProductId(product.getId());
             List<String> allImageUrls = new ArrayList<>();
             if (!allImageUrls.isEmpty()) {
@@ -170,8 +171,9 @@ public class ProductService {
                         partsofProduct.getProductName());
                 return productSubpartResponse;
             }).collect(Collectors.toList());
+            List<ProductAttribute> productAttributes = productAttributeRepository.findAllByProductId(product.getId());
             ProductResponse newProductResponse = productMapper.toProductResponse(product, allImageUrls, suppliers,
-                    productSubpartResponses);
+                    productSubpartResponses, productAttributes);
             return newProductResponse;
 
         }).collect(Collectors.toList());
@@ -186,6 +188,39 @@ public class ProductService {
                 pagedProducts.isLast()
 
         );
+
+    }
+
+    public Response<ProductRequest> createDynamicProductTable(ProductRequest productRequest) {
+
+        Product product = productMapper.toProduct(productRequest);
+
+        Product savedProduct = productRepository.save(product);
+        Supplier supplier = productMapper.toSupplier(productRequest, savedProduct);
+        supplierRepository.save(supplier);
+        if (productRequest.getProductAttributes() == null) {
+            log.info("koi extra row create kiya hi nhi tum");
+        }
+        if (productRequest.getProductAttributes() != null) {
+            log.info("tum check kro code start hua ki nhi");
+            List<ProductAttribute> productAttributes = productRequest.getProductAttributes();
+            if (!productAttributes.isEmpty()) {
+                productAttributes.forEach(p -> {
+                    ProductAttribute productAttribute = new ProductAttribute();
+                    productAttribute.setAttributeName(p.getAttributeName());
+                    productAttribute.setAttributeValue(p.getAttributeValue());
+                    productAttribute.setProduct(savedProduct);
+                    productAttributeRepository.save(productAttribute);
+                });
+            }
+
+        }
+
+        return new Response<>(
+                productRequest,
+                LocalDateTime.now(),
+                "Product detail save successfully",
+                HttpStatus.CREATED);
 
     }
 }

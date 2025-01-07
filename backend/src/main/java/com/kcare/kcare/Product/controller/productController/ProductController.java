@@ -16,6 +16,7 @@ import com.kcare.kcare.common.PageResponse;
 import com.kcare.kcare.common.Response;
 
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -40,7 +41,6 @@ public class ProductController {
         ProductResponse productResponse = productService.getProductImageById(productId);
         return ResponseEntity.ok()
                 .body(productResponse);
-
     }
 
     @GetMapping("/getAllProduct")
@@ -51,6 +51,13 @@ public class ProductController {
 
         return ResponseEntity.ok(productService.getAllProduct(productName, page,
                 size));
+    }
+
+    @PostMapping(path = "/createDynamicTable", consumes = "application/json")
+    public ResponseEntity<Response<ProductRequest>> createDynamicProductTable(
+            @RequestBody @Valid ProductRequest productRequest) {
+
+        return ResponseEntity.ok(productService.createDynamicProductTable(productRequest));
     }
 
 }

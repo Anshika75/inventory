@@ -5,9 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.kcare.kcare.Product.Model.Product;
+import com.kcare.kcare.Product.Model.ProductAttribute;
 import com.kcare.kcare.Product.Model.ProductSubpart;
-import com.kcare.kcare.Product.repository.ProductRepository;
-import com.kcare.kcare.Product.repository.ProductSubpartRepository;
 import com.kcare.kcare.supplier.Model.Supplier;
 
 import lombok.RequiredArgsConstructor;
@@ -15,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ProductMapper {
-
-    private final ProductSubpartRepository productSubpartRepository;
-    private final ProductRepository productRepository;
 
     public Product toProduct(ProductRequest request) {
         return Product.builder()
@@ -42,7 +38,7 @@ public class ProductMapper {
     }
 
     public ProductResponse toProductResponse(Product product, List<String> images, List<Supplier> supplier,
-            List<ProductSubpartResponse> productSubpartResponses) {
+            List<ProductSubpartResponse> productSubpartResponses, List<ProductAttribute> productAttributes) {
         return ProductResponse.builder()
                 .productId(product.getId())
                 .productName(product.getProductName())
@@ -55,6 +51,7 @@ public class ProductMapper {
                 .images(images)
                 .suppliers(supplier)
                 .productSubparts(productSubpartResponses)
+                .productAttributes(productAttributes)
                 .build();
 
     }
