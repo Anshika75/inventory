@@ -29,13 +29,21 @@ import lombok.experimental.SuperBuilder;
 public class Product extends BaseEntity {
 
     private String productName;
-    private String productCategory;
-    private Integer buyingPrice;
+    private String productDescription;
+    private String productCategory; // asset/cosumable
+    private Integer buyingPrice; // ! sgst + cgst or igst
     private Integer quantity;
-    private Integer unit;
     private LocalDate expiryDate;
     private Integer thresholdValue;
-    // private boolean isSubPart;
+    private boolean isContainSubpart;
+    private Integer sgstTaxPercent;
+    private Double totalsgstTaxtAmount;
+    private Double cgstTaxPercent;
+    private Double totalcgstTaxAmount;
+
+    private Double igstTaxPercent;
+    private Double totaligstTaxAmount;
+    private Double taxableAmount; // ! taxableAmount
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference

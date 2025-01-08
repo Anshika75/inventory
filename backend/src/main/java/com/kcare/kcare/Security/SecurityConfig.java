@@ -45,6 +45,7 @@ public class SecurityConfig {
                         "/product/**",
                         "/department/**",
                         "/productAttribute/**",
+                        "demoproduct/**",
                         "/uploads/**",
                         "/webjars/**",
                         "/swagger-ui.html")

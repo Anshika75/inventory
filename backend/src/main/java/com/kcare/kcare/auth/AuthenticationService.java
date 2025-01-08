@@ -53,10 +53,8 @@ public class AuthenticationService {
 
     @Autowired
     private RoleRepository roleRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private Userrepository userrepository;
 
@@ -96,7 +94,6 @@ public class AuthenticationService {
         });
 
         user.setRole(role);
-
         role.addUser(user);
         userrepository.save(user);
         sendValidationEmail(user);
@@ -105,9 +102,7 @@ public class AuthenticationService {
                 request,
                 LocalDateTime.now(),
                 "sucessfully registered",
-                HttpStatus.CREATED
-
-        );
+                HttpStatus.CREATED);
 
     }
 

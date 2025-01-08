@@ -18,12 +18,22 @@ public class ProductResponse {
 
     private Integer productId;
     private String productName;
-    private String category;
-    private Integer buyingPrice;
+    private String productDescription;
+    private String productCategory; // asset/cosumable
+    private Integer buyingPrice; // ! sgst + cgst or igst
     private Integer quantity;
-    private Integer unit;
     private LocalDate expiryDate;
     private Integer thresholdValue;
+    // private boolean isContainSubpart;
+    private Integer sgstTaxPercent;
+    private Double totalsgstTaxtAmount;
+    private Double cgstTaxPercent;
+    private Double totalcgstTaxAmount;
+
+    private Double igstTaxPercent;
+    private Double totaligstTaxAmount;
+    private Double taxableAmount;
+
     private List<String> images;
     private List<Supplier> suppliers;
     private List<ProductSubpartResponse> productSubparts;

@@ -84,9 +84,7 @@ public class ProductService {
             productImage.setImagePath(imagesPath2);
             productImage.setProduct(product);
             productImageRepository.save(productImage);
-
         }
-
     }
 
     public ProductResponse getProductImageById(Integer productId) {
@@ -194,7 +192,6 @@ public class ProductService {
     public Response<ProductRequest> createDynamicProductTable(ProductRequest productRequest) {
 
         Product product = productMapper.toProduct(productRequest);
-
         Product savedProduct = productRepository.save(product);
         Supplier supplier = productMapper.toSupplier(productRequest, savedProduct);
         supplierRepository.save(supplier);
@@ -215,12 +212,11 @@ public class ProductService {
             }
 
         }
-
         return new Response<>(
                 productRequest,
                 LocalDateTime.now(),
                 "Product detail save successfully",
                 HttpStatus.CREATED);
-
     }
+
 }

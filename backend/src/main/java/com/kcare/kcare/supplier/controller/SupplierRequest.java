@@ -11,6 +11,12 @@ public class SupplierRequest {
 
     private String businessCard;
     private String supplierName;
-    private String phoneNumber;
+    private String contact;
+    private String supplierCategory;
+    private Integer sellingPrices;
+    private String stateName;
+    private String email;
+    private String GSTIN;
+    private String address;
 
 }

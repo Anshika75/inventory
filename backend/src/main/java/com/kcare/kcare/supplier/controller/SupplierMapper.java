@@ -11,7 +11,8 @@ public class SupplierMapper {
         return Supplier.builder()
                 .businessCard(supplierRequest.getBusinessCard())
                 .supplierName(supplierRequest.getSupplierName())
-                .phoneNumber(supplierRequest.getPhoneNumber())
+                .contact(supplierRequest.getContact())
+
                 .build();
     }
 

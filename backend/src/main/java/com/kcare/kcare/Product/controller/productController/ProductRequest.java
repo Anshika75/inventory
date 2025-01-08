@@ -24,13 +24,26 @@ public class ProductRequest {
     // private List<MultipartFile> images;
     @NotNull(message = "productName should not be null")
     private String productName;
-    private String productCategory;
-    private Integer buyingPrice;
+    private String productDescription;
+    private String productCategory; // asset/cosumable
+    private Integer buyingPrice; // ! sgst + cgst or igst
     private Integer quantity;
-    private Integer unit;
     private LocalDate expiryDate;
     private Integer thresholdValue;
+    private boolean isContainSubpart;
+    private Integer sgstTaxPercent;
+    private Double totalsgstTaxtAmount;
+    private Double cgstTaxPercent;
+    private Double totalcgstTaxAmount;
+
+    private HSN hsn;// hsn/sac;
+
+    private Double igstTaxPercent;
+    private Double totaligstTaxAmount;
+    private Double taxableAmount;
+
     private Integer parentProductId;
+
     private List<ProductAttribute> productAttributes;
 
     // ! supplier Detail
