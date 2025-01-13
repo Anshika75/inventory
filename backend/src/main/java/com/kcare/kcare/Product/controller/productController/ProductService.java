@@ -193,13 +193,19 @@ public class ProductService {
     public PageResponse<ProductResponse> getAllProduct(String productName, int page, int size) {
 
         Specification<Product> spec = Specification.where(null);
-        if (productName != null) {
-            spec = spec.and(ProductSpecification.withProductName(productName));
+        if (productName != null && !productName.isEmpty()) {
+            Specification<Product> exactMatchSpec = ProductSpecification.withProductName(productName);
+            Specification<Product> startsWithSpec = ProductSpecification.withProductNameStartingWith(productName);
+            Specification<Product> containsSpec = ProductSpecification.withProductNameContaining(productName);
+
+            // Combine specifications using `or`
+            spec = Specification.where(exactMatchSpec).or(startsWithSpec).or(containsSpec);
         }
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by("productName").descending());
 
-        Page<Product> pagedProducts = productRepository.findAll(spec, pageable);
+        Page<Product> pagedProducts = productRepository
+                .findAll(spec, pageable);
 
         if (pagedProducts.isEmpty()) {
             throw new ResourceNotFoundException("Product Not Available in database");
