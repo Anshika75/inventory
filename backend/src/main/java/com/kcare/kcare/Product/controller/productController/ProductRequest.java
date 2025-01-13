@@ -1,4 +1,4 @@
-package com.kcare.kcare.Product.controller.productController;
+package com.kcare.kcare.Product.controller.ProductController;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -26,20 +26,20 @@ public class ProductRequest {
     private String productName;
     private String productDescription;
     private String productCategory; // asset/cosumable
-    private Integer buyingPrice; // ! sgst + cgst or igst
-    private Integer quantity;
+    private Double buyingPrice = 0.0; // ! sgst + cgst or igst
+    private Integer quantity = 0;
     private LocalDate expiryDate;
     private Integer thresholdValue;
     private boolean isContainSubpart;
-    private Integer sgstTaxPercent;
-    private Double totalsgstTaxtAmount;
-    private Double cgstTaxPercent;
-    private Double totalcgstTaxAmount;
+    private Integer sgstTaxPercent = 0;
+    private Double totalsgstTaxtAmount = 0.0;
+    private Integer cgstTaxPercent = 0;
+    private Double totalcgstTaxAmount = 0.0;
 
-    private HSN hsn;// hsn/sac;
+    // private HSN hsn;// hsn/sac;
 
-    private Double igstTaxPercent;
-    private Double totaligstTaxAmount;
+    private Integer igstTaxPercent = 0;
+    private Double totaligstTaxAmount = 0.0;
     private Double taxableAmount;
 
     private Integer parentProductId;

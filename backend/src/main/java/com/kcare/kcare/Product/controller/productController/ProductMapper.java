@@ -1,4 +1,4 @@
-package com.kcare.kcare.Product.controller.productController;
+package com.kcare.kcare.Product.controller.ProductController;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ProductMapper {
                 .isContainSubpart(request.isContainSubpart())
                 .sgstTaxPercent(request.getSgstTaxPercent())
                 .totalsgstTaxtAmount(request.getTotalsgstTaxtAmount())
-                .cgstTaxPercent(request.getTotalcgstTaxAmount())
+                .cgstTaxPercent(request.getIgstTaxPercent())
                 .totalcgstTaxAmount(request.getTotalcgstTaxAmount())
                 .igstTaxPercent(request.getIgstTaxPercent())
                 .totaligstTaxAmount(request.getTotaligstTaxAmount())

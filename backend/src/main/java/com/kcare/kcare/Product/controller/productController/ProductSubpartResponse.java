@@ -1,4 +1,4 @@
-package com.kcare.kcare.Product.controller.productController;
+package com.kcare.kcare.Product.controller.ProductController;
 
 import lombok.Builder;
 import lombok.Getter;

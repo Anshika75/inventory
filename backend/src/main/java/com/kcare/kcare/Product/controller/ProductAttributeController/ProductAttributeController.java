@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kcare.kcare.Product.controller.productController.ProductRequest;
+import com.kcare.kcare.Product.controller.ProductController.ProductRequest;
 import com.kcare.kcare.common.Response;
 
 import jakarta.validation.Valid;
@@ -19,7 +19,7 @@ public class ProductAttributeController {
 
     private final ProductAttributeService productAttributeService;
 
-    @PostMapping("/addProuduct")
+    @PostMapping("/addProduct")
     public ResponseEntity<?> addAttriubte(@RequestBody ProductAttributeRequest productAttributeRequest) {
 
         return ResponseEntity.ok(productAttributeService.addAttriubte(productAttributeRequest));

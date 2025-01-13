@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+
 import jakarta.persistence.EntityNotFoundException;
 
 @RestControllerAdvice
@@ -139,6 +141,16 @@ public class GlobalExceptionHandler {
         public ResponseEntity<ExceptionResponse> handleException(ResponseStatusException exp) {
                 exp.printStackTrace();
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
+                                ExceptionResponse.builder()
+                                                .businessErrorDescription("Invalid Input")
+                                                .error(exp.getMessage())
+                                                .build());
+        }
+
+        @ExceptionHandler(MismatchedInputException.class)
+        public ResponseEntity<ExceptionResponse> handleException(MismatchedInputException exp) {
+                exp.printStackTrace();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                                 ExceptionResponse.builder()
                                                 .businessErrorDescription("Invalid Input")
                                                 .error(exp.getMessage())

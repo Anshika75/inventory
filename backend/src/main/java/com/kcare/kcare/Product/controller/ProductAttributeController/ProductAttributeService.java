@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.kcare.kcare.Product.Model.Product;
 import com.kcare.kcare.Product.Model.ProductAttribute;
-import com.kcare.kcare.Product.controller.productController.ProductMapper;
-import com.kcare.kcare.Product.controller.productController.ProductRequest;
+import com.kcare.kcare.Product.controller.ProductController.ProductMapper;
+import com.kcare.kcare.Product.controller.ProductController.ProductRequest;
 import com.kcare.kcare.Product.repository.ProductAttributeRepository;
 import com.kcare.kcare.Product.repository.ProductRepository;
 import com.kcare.kcare.common.Response;
@@ -67,18 +67,28 @@ public class ProductAttributeService {
 
         if (productRequest.getIgstTaxPercent() != null && productRequest.getCgstTaxPercent() == null
                 && productRequest.getSgstTaxPercent() == null) {
-            Double proudctTaxAmount = (productRequest.getIgstTaxPercent() / 100)
-                    * productRequest.getTotaligstTaxAmount();
-            log.info("productTaxAmount: ", proudctTaxAmount);
-            Double taxableAmount = productRequest.getBuyingPrice() + proudctTaxAmount;
-            if (productRequest.getTotaligstTaxAmount() != proudctTaxAmount) {
-                log.info("Invalid Input Data");
-                // throw new RuntimeErrorException()
+            Double calIgstTaxAmount = (productRequest.getIgstTaxPercent() / 100)
+                    * productRequest.getBuyingPrice();
+            log.info("productTaxAmount: ", calIgstTaxAmount);
+            if (productRequest.getTotaligstTaxAmount() != calIgstTaxAmount) {
+                log.info("Wrong Entered Value TotalIgstTaxAmount");
             }
-            newProduct.setTotaligstTaxAmount(proudctTaxAmount);
+            Double taxableAmount = productRequest.getBuyingPrice() + calIgstTaxAmount;
+            if (productRequest.getTotaligstTaxAmount() != calIgstTaxAmount) {
+                log.info("Invalid Taxalbe Data");
+                // throw new MismatchedInputException(null, "sfdsf");
+
+            }
+            newProduct.setTotaligstTaxAmount(calIgstTaxAmount);
             newProduct.setTaxableAmount(taxableAmount);
 
         } else {
+
+            Double calSgstTaxAmount = (productRequest.getSgstTaxPercent() / 100) * (productRequest.getBuyingPrice());
+
+            Double calCgstTaxAmount = (productRequest.getCgstTaxPercent() / 100) * (productRequest.getBuyingPrice());
+
+            Double totalTax = calCgstTaxAmount + calCgstTaxAmount;
 
         }
 
@@ -108,7 +118,7 @@ public class ProductAttributeService {
         return new Response<>(
                 productRequest,
                 LocalDateTime.now(),
-                "Product detail save successfully",
+                "Product detail saved successfully",
                 HttpStatus.CREATED);
     }
 
